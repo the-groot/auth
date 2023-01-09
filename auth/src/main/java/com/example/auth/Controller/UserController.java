@@ -1,13 +1,16 @@
 package com.example.auth.Controller;
 
 
+import com.example.auth.Dto.UserDto;
 import com.example.auth.Entity.User;
 import com.example.auth.Service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,5 +28,18 @@ public class UserController {
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
+
+    @PostMapping("/signup")
+    public ResponseEntity<UserDto> signup(@Valid @RequestBody UserDto userDto){
+        ResponseEntity responseEntity = userService.signup(userDto);
+        return responseEntity;
+    }
+
+    @PostMapping("/hello")
+    public String hello(){
+        return "hello";
+    }
+
+
 
 }
