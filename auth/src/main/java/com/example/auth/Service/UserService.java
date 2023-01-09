@@ -2,19 +2,17 @@ package com.example.auth.Service;
 
 
 
-import com.example.auth.Dto.DefaultResDto;
-import com.example.auth.Dto.ResponseMessageDto;
-import com.example.auth.Dto.StatusCodeDto;
+import com.example.auth.Vo.DefaultResVo;
+import com.example.auth.Vo.ResponseMessageVo;
+import com.example.auth.Vo.StatusCodeVo;
 import com.example.auth.Dto.UserDto;
 import com.example.auth.Entity.User;
-import com.example.auth.Exception.DuplicateMemberException;
 import com.example.auth.Repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -33,13 +31,13 @@ public class UserService {
 
     @Transactional
     public ResponseEntity signup(UserDto userDto){
-        int statusCode=StatusCodeDto.OK;
-        String responseMesage=ResponseMessageDto.SIGNUP_SUCCESS;
+        int statusCode= StatusCodeVo.OK;
+        String responseMesage= ResponseMessageVo.SIGNUP_SUCCESS;
 
 
         if (userRepository.findOneByUsername(userDto.getUsername()).orElse(null)!=null){
-            statusCode=StatusCodeDto.CONFLICT;
-            responseMesage=ResponseMessageDto.SIGNUP_FAIL;
+            statusCode= StatusCodeVo.CONFLICT;
+            responseMesage= ResponseMessageVo.SIGNUP_FAIL;
            // throw new DuplicateMemberException("이미 가입되어 있는 유저입니다");
         }
 
@@ -51,6 +49,8 @@ public class UserService {
             userRepository.save(user);
         }
 
-        return new ResponseEntity(DefaultResDto.res(statusCode, responseMesage, userDto), HttpStatus.CONFLICT);
+        return new ResponseEntity(DefaultResVo.res(statusCode, responseMesage, userDto), HttpStatus.CONFLICT);
     }
+
+
 }
