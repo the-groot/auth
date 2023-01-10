@@ -1,33 +1,58 @@
 package com.example.auth.Config;
 
+import com.example.auth.Security.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CorsFilter;
-
 
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CorsFilter corsFilter;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final TokenProvider tokenProvider;
 
-    public SecurityConfig(CorsFilter corsFilter) {
-        this.corsFilter = corsFilter;
+    public SecurityConfig(JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, TokenProvider tokenProvider) {
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.tokenProvider = tokenProvider;
+    }
+
+
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
 
+               // .exceptionHandling()
+               // .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+               // .accessDeniedHandler(jwtAccessDeniedHandler)
+              //  .and()
 
                 .authorizeRequests()
-                .antMatchers("/api/userlist").permitAll()
-                .antMatchers("/api/signup").permitAll()
-                .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/test").hasRole("USER")
                 .anyRequest().authenticated();
+
+               // .and()
+               // .apply(new JwtSecurityConfig(tokenProvider));
+
         return http.build();
     }
+
+
 }
+
+
