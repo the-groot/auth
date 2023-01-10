@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -35,7 +36,8 @@ public class UserService {
         String responseMesage= ResponseMessageVo.SIGNUP_SUCCESS;
 
 
-        if (userRepository.findOneByUsername(userDto.getUsername()).orElse(null)!=null){
+
+        if (userRepository.findOneByUsername(userDto.getUsername()).orElse(null)!=null){    //아이디 중복일때
             statusCode= StatusCodeVo.CONFLICT;
             responseMesage= ResponseMessageVo.SIGNUP_FAIL;
            // throw new DuplicateMemberException("이미 가입되어 있는 유저입니다");
