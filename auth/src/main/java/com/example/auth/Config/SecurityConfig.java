@@ -36,18 +36,18 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
-               // .exceptionHandling()
-               // .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-               // .accessDeniedHandler(jwtAccessDeniedHandler)
-              //  .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .and()
 
                 .authorizeRequests()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/test").hasRole("USER")
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
 
-               // .and()
-               // .apply(new JwtSecurityConfig(tokenProvider));
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider));
 
         return http.build();
     }
