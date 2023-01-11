@@ -5,6 +5,7 @@ import com.example.auth.Dto.TokenDto;
 import com.example.auth.Security.JwtFilter;
 import com.example.auth.Security.TokenInfo;
 import com.example.auth.Security.TokenProvider;
+import com.example.auth.Service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -31,23 +32,19 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    private final AuthService authService;
+
+    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder,
+                          AuthService authService) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.authService=authService;
+
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<TokenInfo> authorize(@Valid @RequestBody LoginDto loginDto) {
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        TokenInfo jwt = tokenProvider.createToken(authentication);
+        TokenInfo jwt = authService.login(loginDto);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
