@@ -5,15 +5,11 @@ import com.example.auth.Dto.UserDto;
 import com.example.auth.Entity.Authority;
 import com.example.auth.Entity.User;
 import com.example.auth.Repository.UserRepository;
-import com.example.auth.Security.JwtFilter;
 import com.example.auth.Security.TokenInfo;
 import com.example.auth.Security.TokenProvider;
 import com.example.auth.Util.SecurityUtil;
 import com.example.auth.exception.DuplicateMemberException;
 import com.example.auth.exception.NotFoundMemberException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -31,6 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
@@ -89,4 +86,7 @@ public class UserService {
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
     }
+
+
+
 }

@@ -67,12 +67,13 @@ public class TokenProvider implements InitializingBean {
                 .compact();*/
         String accessToken = createAccessToken(authentication);
         String refreshToken = createRefreshToken();
-
+        String username = authentication.getName();
 
         return TokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .username(username)
                 .build();
 
     }

@@ -1,6 +1,8 @@
 package com.example.auth.Service;
 
 import com.example.auth.Dto.LoginDto;
+import com.example.auth.Entity.RefreshToken;
+import com.example.auth.Repository.RedisRepository;
 import com.example.auth.Repository.UserRepository;
 import com.example.auth.Security.TokenInfo;
 import com.example.auth.Security.TokenProvider;
@@ -20,12 +22,14 @@ public class AuthService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+    private final RedisRepository redisRepository;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
+    public AuthService(AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider,
+                       RedisRepository redisRepository) {
 
         this.authenticationManagerBuilder=authenticationManagerBuilder;
         this.tokenProvider=tokenProvider;
+        this.redisRepository=redisRepository;
     }
 
     public TokenInfo login(LoginDto loginDto){
@@ -42,4 +46,12 @@ public class AuthService {
         return jwt;
     }
 
+    public void saveRedis(String refreshToken, String username){
+        RefreshToken refreshToken1 = new RefreshToken(refreshToken, username);
+        redisRepository.save(refreshToken1);
+    }
+
+    public RefreshToken findRedis(String username){
+       return redisRepository.findRefreshTokenByUsername(username);
+    }
 }

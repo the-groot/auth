@@ -2,6 +2,7 @@ package com.example.auth.Controller;
 
 import com.example.auth.Dto.LoginDto;
 import com.example.auth.Dto.TokenDto;
+import com.example.auth.Entity.RefreshToken;
 import com.example.auth.Security.JwtFilter;
 import com.example.auth.Security.TokenInfo;
 import com.example.auth.Security.TokenProvider;
@@ -48,6 +49,8 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<TokenInfo> authorize(@Valid @RequestBody LoginDto loginDto) {
         TokenInfo jwt = authService.login(loginDto);
+        authService.saveRedis(jwt.getRefreshToken(), jwt.getUsername());
+
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
@@ -62,8 +65,15 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void reissueAccessToken(@RequestHeader HttpHeaders headers){
         String username = SecurityUtil.getCurrentUsername().get();
-        System.out.println("headers = " + headers);
-        System.out.println("username = " + username);
+        RefreshToken redisToken = authService.findRedis(username);
+
+        System.out.println("redisToken = " + redisToken.getRefreshToken());
+
+
+
+       // System.out.println("headers = " + headers);
+       // System.out.println("username = " + username);
     }
+
 }
 
