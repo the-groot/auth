@@ -46,7 +46,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     public TokenInfo createToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
+       /* String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
@@ -64,7 +64,10 @@ public class TokenProvider implements InitializingBean {
         String refreshToken=Jwts.builder()
                 .setExpiration(refreshValidity)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+                .compact();*/
+        String accessToken = createAccessToken(authentication);
+        String refreshToken = createRefreshToken();
+
 
         return TokenInfo.builder()
                 .grantType("Bearer")
@@ -72,6 +75,37 @@ public class TokenProvider implements InitializingBean {
                 .refreshToken(refreshToken)
                 .build();
 
+    }
+
+    public String createAccessToken(Authentication authentication) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+        Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds);
+
+        String accessToken=Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(accessValidity)
+                .compact();
+
+        return accessToken;
+    }
+
+    public String createRefreshToken() {
+
+        long now = (new Date()).getTime();
+        Date refreshValidity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+        String refreshToken=Jwts.builder()
+                .setExpiration(refreshValidity)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return refreshToken;
     }
 
     public Authentication getAuthentication(String token) {

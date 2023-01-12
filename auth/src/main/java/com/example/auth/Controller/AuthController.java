@@ -6,8 +6,10 @@ import com.example.auth.Security.JwtFilter;
 import com.example.auth.Security.TokenInfo;
 import com.example.auth.Security.TokenProvider;
 import com.example.auth.Service.AuthService;
+import com.example.auth.Util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 
 @RestController
@@ -49,7 +52,18 @@ public class AuthController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
+        Optional<String> currentUsername = SecurityUtil.getCurrentUsername();
+        System.out.println("currentUsername = " + currentUsername);
+
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
+    }
+
+    @PostMapping("/reissue")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public void reissueAccessToken(@RequestHeader HttpHeaders headers){
+        String username = SecurityUtil.getCurrentUsername().get();
+        System.out.println("headers = " + headers);
+        System.out.println("username = " + username);
     }
 }
 
