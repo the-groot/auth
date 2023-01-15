@@ -19,10 +19,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "username", length = 50, unique = true)
+    @Column(name = "username", length = 50, unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", length = 100)
+    @Column(name = "password", length = 100, nullable = false)
     private String password;
 
     @Column(name = "nickname", length = 50)
@@ -30,6 +30,9 @@ public class User {
 
     @Column(name = "activated")
     private boolean activated;
+
+    @Column(name = "auth", length=50)
+    private String auth;
 
     @ManyToMany
     @JoinTable(

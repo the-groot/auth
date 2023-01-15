@@ -3,6 +3,7 @@ package com.example.auth.Service;
 
 import com.example.auth.Entity.User;
 import com.example.auth.Repository.UserRepository;
+import com.example.auth.Security.CustomUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +29,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(final String username) {
 
-        return userRepository.findOneWithAuthoritiesByUsername(username)
+      /*  return userRepository.findOneWithAuthoritiesByUsername(username)
                 .map(user -> createUser(username, user))
+                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));*/
+
+        User user = userRepository.findOneByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+
+       // GrantedAuthority grantedAuthority = new GrantedAuthority(user.getAuth());
+
+        return new CustomUserDetails(user, Collections.singleton(new SimpleGrantedAuthority(user.getAuth().toString())));
+
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {

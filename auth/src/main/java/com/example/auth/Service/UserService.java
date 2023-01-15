@@ -65,6 +65,7 @@ public class UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))
+                .auth("ROLE_USER")
                 .activated(true)
                 .build();
 
