@@ -121,6 +121,7 @@ public class TokenProvider implements InitializingBean {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
+        System.out.println("authorities = " + authorities);
 
         User principal = new User(claims.getSubject(), "", authorities);
 

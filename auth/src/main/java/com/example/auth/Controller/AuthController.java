@@ -65,8 +65,9 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public void reissueAccessToken(@RequestHeader HttpHeaders headers){
         String username = SecurityUtil.getCurrentUsername().get();
-        RefreshToken redisToken = authService.findRedis(username);
+        RefreshToken redisToken = authService.findRefershToken(username);
 
+        String headerRefreshToken = headers.getFirst("refreshtoken");
         System.out.println("redisToken = " + redisToken.getRefreshToken());
 
 

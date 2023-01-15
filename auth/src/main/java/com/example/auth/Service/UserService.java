@@ -59,7 +59,7 @@ public class UserService {
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
-        System.out.println("userDto.getPassword() = " + userDto.getPassword());
+
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
@@ -69,7 +69,7 @@ public class UserService {
                 .build();
 
         System.out.println(user.getPassword());
-        //return UserDto.from(userRepository.save(user));
+
         return UserDto.from(userRepository.save(user));
     }
 

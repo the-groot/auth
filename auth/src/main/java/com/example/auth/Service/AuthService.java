@@ -37,6 +37,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        System.out.println("authentication = " + authentication);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -51,7 +52,10 @@ public class AuthService {
         redisRepository.save(refreshToken1);
     }
 
-    public RefreshToken findRedis(String username){
+    public RefreshToken findRefershToken(String username){
        return redisRepository.findRefreshTokenByUsername(username);
+    }
+    public void validateRefreshToken(RefreshToken refreshToken){
+
     }
 }
