@@ -63,20 +63,12 @@ public class AuthController {
 
     @PostMapping("/reissue")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public void reissueAccessToken(@RequestHeader HttpHeaders headers){
-        /*String username = SecurityUtil.getCurrentUsername().get();
-        RefreshToken redisToken = authService.findRefershToken(username);
-        System.out.println("redisToken in redis = " + redisToken.getRefreshToken());
-
-        String headerRefreshToken = headers.getFirst("refreshtoken");
-        System.out.println("redisToken in headers = " + redisToken.getRefreshToken());*/
-
-        authService.reissueRefreshToken(headers.getFirst("refreshtoken"));
+    public String reissueAccessToken(@RequestHeader HttpHeaders headers){
 
 
+        String refreshtoken = authService.reissueRefreshToken(headers.getFirst("refreshtoken"));
+        return refreshtoken;
 
-       // System.out.println("headers = " + headers);
-       // System.out.println("username = " + username);
     }
 
 }

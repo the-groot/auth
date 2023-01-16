@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -50,8 +51,13 @@ public class AuthService {
 
     public void saveRedis(String refreshToken, String username){
         RefreshToken refreshToken1 = new RefreshToken(refreshToken, username);
-        System.out.println("refreshToken is saved: "+refreshToken1.getRefreshToken());
-        redisRepository.save(refreshToken1);
+        RefreshToken refreshTokenInRedis = findRefreshToken(username);
+        if(Objects.isNull(refreshTokenInRedis)){
+            redisRepository.save(refreshToken1);
+        }
+        else if(!tokenProvider.validateToken(refreshTokenInRedis.getRefreshToken())){
+            redisRepository.delete(refreshTokenInRedis);
+        }
     }
 
     public RefreshToken findRefreshToken(String username){
@@ -72,7 +78,7 @@ public class AuthService {
 
     }
 
-    public void reissueRefreshToken(String refreshTokenInHeaders){
+    public String reissueRefreshToken(String refreshTokenInHeaders){
         String username = SecurityUtil.getCurrentUsername().get();
         RefreshToken refreshTokenInRedis = findRefreshToken(username);
 
@@ -82,10 +88,11 @@ public class AuthService {
         if(validateRefreshToken(refreshTokenInRedis,refreshTokenInHeaders)){
             final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String accessToken = tokenProvider.createAccessToken(authentication);
-            System.out.println("accessToken = " + accessToken);
+            return accessToken;
         }
         else{
             System.out.println("refresh token이 유효하지 않습니다");
+            return null;
         }
 
     }
