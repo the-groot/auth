@@ -31,15 +31,17 @@ public class UserDto {
 
     private Set<AuthorityDto> authorityDtoSet;
 
+    private String auth;
+
     public static UserDto from(User user) {
         if(user == null) return null;
 
         return UserDto.builder()
                 .username(user.getUsername())
                 .nickname(user.getNickname())
-                .authorityDtoSet(user.getAuthorities().stream()
+              /*  .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toSet()))*/
                 .build();
     }
 }
