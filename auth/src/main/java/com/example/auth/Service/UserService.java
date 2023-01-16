@@ -65,11 +65,20 @@ public class UserService {
         return UserDto.from(userRepository.findOneWithAuthoritiesByUsername(username).orElse(null));
     }
 
-    @Transactional(readOnly = true)
+    /*@Transactional(readOnly = true)
     public UserDto getMyUserWithAuthorities() {
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(userRepository::findOneWithAuthoritiesByUsername)
+                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+        );
+    }*/
+
+    @Transactional(readOnly = true)
+    public UserDto getMyUserWithAuthorities() {
+        return UserDto.from(
+                SecurityUtil.getCurrentUsername()
+                        .flatMap(userRepository::findOneByUsername)
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
     }

@@ -29,7 +29,7 @@ public class UserDto {
     @Size(min = 3, max = 50)
     private String nickname;
 
-    private Set<AuthorityDto> authorityDtoSet;
+    //private Set<AuthorityDto> authorityDtoSet;
 
     private String auth;
 
@@ -42,6 +42,7 @@ public class UserDto {
               /*  .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
                         .collect(Collectors.toSet()))*/
+                .auth(user.getAuth())
                 .build();
     }
 }
