@@ -6,6 +6,7 @@ import com.example.auth.Repository.RedisRepository;
 import com.example.auth.Repository.UserRepository;
 import com.example.auth.Security.TokenInfo;
 import com.example.auth.Security.TokenProvider;
+import com.example.auth.Util.SecurityUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -49,13 +50,43 @@ public class AuthService {
 
     public void saveRedis(String refreshToken, String username){
         RefreshToken refreshToken1 = new RefreshToken(refreshToken, username);
+        System.out.println("refreshToken is saved: "+refreshToken1.getRefreshToken());
         redisRepository.save(refreshToken1);
     }
 
-    public RefreshToken findRefershToken(String username){
+    public RefreshToken findRefreshToken(String username){
        return redisRepository.findRefreshTokenByUsername(username);
     }
-    public void validateRefreshToken(RefreshToken refreshToken){
+    public boolean validateRefreshToken(RefreshToken refreshTokenInRedis, String refreshTokenInHeaders){
+        if(!tokenProvider.validateToken(refreshTokenInRedis.getRefreshToken())){
+            System.out.println("Refresh Token이 유효하지 않습니다.");
+            return false;
+        }
+        else if(!refreshTokenInRedis.getRefreshToken().equals(refreshTokenInHeaders)){
+            System.out.println("토큰의 유저 정보가 일치하지 않습니다.");
+            return false;
+        }
+        else{
+            return true;
+        }
+
+    }
+
+    public void reissueRefreshToken(String refreshTokenInHeaders){
+        String username = SecurityUtil.getCurrentUsername().get();
+        RefreshToken refreshTokenInRedis = findRefreshToken(username);
+
+        System.out.println("refreshTokenInRedis.getRefreshToken() = " + refreshTokenInRedis.getRefreshToken());
+        System.out.println("refreshTokenInHeaders = " + refreshTokenInHeaders);
+
+        if(validateRefreshToken(refreshTokenInRedis,refreshTokenInHeaders)){
+            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String accessToken = tokenProvider.createAccessToken(authentication);
+            System.out.println("accessToken = " + accessToken);
+        }
+        else{
+            System.out.println("refresh token이 유효하지 않습니다");
+        }
 
     }
 }
