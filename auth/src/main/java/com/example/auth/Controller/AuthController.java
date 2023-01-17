@@ -31,7 +31,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -46,7 +46,7 @@ public class AuthController {
 
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<TokenInfo> authorize(@Valid @RequestBody LoginDto loginDto) {
         TokenInfo jwt = authService.login(loginDto);
         authService.saveRedis(jwt.getRefreshToken(), jwt.getUsername());
@@ -65,11 +65,16 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public String reissueAccessToken(@RequestHeader HttpHeaders headers){
 
-
         String refreshtoken = authService.reissueRefreshToken(headers.getFirst("refreshtoken"));
         return refreshtoken;
-
     }
+
+    @PostMapping("/validate")
+    public boolean validateAccessToken(@RequestHeader String authorization){
+        String accessToken = authorization.substring(7);
+        return tokenProvider.validateToken(accessToken);
+    }
+
 
 }
 

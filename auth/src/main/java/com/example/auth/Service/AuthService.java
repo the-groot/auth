@@ -45,6 +45,15 @@ public class AuthService {
 
 
         TokenInfo jwt = tokenProvider.createToken(authentication);
+        RefreshToken refreshTokenInRedis = findRefreshToken(loginDto.getUsername());
+
+        if(Objects.isNull(refreshTokenInRedis)){    //redis에 refreshtoken 없으면 최초로그인
+            RefreshToken redisRefreshToken = new RefreshToken(jwt.getRefreshToken(), loginDto.getUsername());
+            redisRepository.save(redisRefreshToken);
+        }
+        else{   //있으면 최초로그인x
+            jwt.setRefreshToken(null);
+        }
 
         return jwt;
     }
@@ -64,6 +73,9 @@ public class AuthService {
        return redisRepository.findRefreshTokenByUsername(username);
     }
     public boolean validateRefreshToken(RefreshToken refreshTokenInRedis, String refreshTokenInHeaders){
+        System.out.println("refreshTokenInRedis = " + refreshTokenInRedis);
+        System.out.println("refreshTokenInHeaders = " + refreshTokenInHeaders);
+
         if(!tokenProvider.validateToken(refreshTokenInRedis.getRefreshToken())){
             System.out.println("Refresh Token이 유효하지 않습니다.");
             return false;
