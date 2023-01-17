@@ -69,6 +69,7 @@ public class AuthController {
         return refreshtoken;
     }
 
+
     @PostMapping("/validate")
     public boolean validateAccessToken(@RequestHeader String authorization){
         String accessToken = authorization.substring(7);

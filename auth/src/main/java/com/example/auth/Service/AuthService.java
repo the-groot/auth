@@ -76,17 +76,22 @@ public class AuthService {
         System.out.println("refreshTokenInRedis = " + refreshTokenInRedis);
         System.out.println("refreshTokenInHeaders = " + refreshTokenInHeaders);
 
-        if(!tokenProvider.validateToken(refreshTokenInRedis.getRefreshToken())){
-            System.out.println("Refresh Token이 유효하지 않습니다.");
+        if(Objects.isNull(refreshTokenInRedis)){    //refreshtoken이 만료됐을때
             return false;
         }
-        else if(!refreshTokenInRedis.getRefreshToken().equals(refreshTokenInHeaders)){
-            System.out.println("토큰의 유저 정보가 일치하지 않습니다.");
-            return false;
+        else{   //refreshtoken이 존재할때
+
+            if(!refreshTokenInRedis.getRefreshToken().equals(refreshTokenInHeaders)){
+                System.out.println("토큰의 유저 정보가 일치하지 않습니다.");
+                return false;
+            }
+            else{
+                return true;
+            }
+
         }
-        else{
-            return true;
-        }
+
+
 
     }
 
@@ -94,7 +99,7 @@ public class AuthService {
         String username = SecurityUtil.getCurrentUsername().get();
         RefreshToken refreshTokenInRedis = findRefreshToken(username);
 
-        System.out.println("refreshTokenInRedis.getRefreshToken() = " + refreshTokenInRedis.getRefreshToken());
+        System.out.println("refreshTokenInRedis" + refreshTokenInRedis);
         System.out.println("refreshTokenInHeaders = " + refreshTokenInHeaders);
 
         if(validateRefreshToken(refreshTokenInRedis,refreshTokenInHeaders)){
