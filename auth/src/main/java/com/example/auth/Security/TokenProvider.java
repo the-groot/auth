@@ -1,5 +1,6 @@
 package com.example.auth.Security;
 
+import com.example.auth.Vo.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -85,6 +86,7 @@ public class TokenProvider implements InitializingBean {
 
         long now = (new Date()).getTime();
         Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds);
+
 
         String accessToken=Jwts.builder()
                 .setSubject(authentication.getName())
