@@ -1,7 +1,10 @@
 package com.example.auth.Controller;
 
 import com.example.auth.Dto.LoginDto;
+import com.example.auth.Entity.User;
+import com.example.auth.Repository.UserRepository;
 import com.example.auth.Security.JwtFilter;
+import com.example.auth.Service.UserService;
 import com.example.auth.Vo.DefaultResponse;
 import com.example.auth.Vo.TokenInfo;
 import com.example.auth.Security.TokenProvider;
@@ -31,13 +34,15 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final AuthService authService;
+    private final UserService userService;
+
 
     public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder,
-                          AuthService authService) {
+                          AuthService authService, UserService userService) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.authService=authService;
-
+        this.userService=userService;
     }
 
     @PostMapping("/login")
@@ -70,6 +75,14 @@ public class AuthController {
     public boolean validateAccessToken(@RequestHeader String authorization){
         String accessToken = authorization.substring(7);
         return tokenProvider.validateToken(accessToken);
+    }
+
+    @GetMapping("/my")
+    public Optional<User> getUserFromJwt(@RequestHeader String authorization) {
+        String accessToken = authorization.substring(7);
+        String username = authService.getUsernameFromAccessToken(accessToken);
+        Optional<User> userByUsername = userService.getUserByUsername(username);
+        return userByUsername;
     }
 
 

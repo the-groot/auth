@@ -9,13 +9,19 @@ import com.example.auth.Vo.StatusCode;
 import com.example.auth.Vo.TokenInfo;
 import com.example.auth.Security.TokenProvider;
 import com.example.auth.Util.SecurityUtil;
+
 import org.aspectj.bridge.Message;
+
+import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -114,5 +120,15 @@ public class AuthService {
         }*/
 
 
+    }
+
+    public String getUsernameFromAccessToken(String accessToken){
+        String payloadJWT= accessToken.split("\\.")[1];
+        Base64.Decoder decoder=Base64.getUrlDecoder();
+
+        String payload=new String(decoder.decode(payloadJWT));
+        JsonParser jsonParser=new BasicJsonParser();
+        Map<String, Object> jsonArray = jsonParser.parseMap(payload);
+        return jsonArray.get("sub").toString();
     }
 }
