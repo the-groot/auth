@@ -34,14 +34,16 @@ public class UserDto {
     private String auth;
 
     public static UserDto from(User user) {
-        if(user == null) return null;
+        if (user == null) {
+            return null;
+        }
 
         return UserDto.builder()
                 .username(user.getUsername())
                 .nickname(user.getNickname())
-              /*  .authorityDtoSet(user.getAuthorities().stream()
-                        .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
-                        .collect(Collectors.toSet()))*/
+                /*  .authorityDtoSet(user.getAuthorities().stream()
+                          .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
+                          .collect(Collectors.toSet()))*/
                 .auth(user.getAuth())
                 .build();
     }

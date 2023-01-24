@@ -14,7 +14,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerConfig {
 
     @Bean
-    public Docket api(){
+    public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
@@ -24,7 +24,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo());
     }
 
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Auth API")
                 .description("Auth API")

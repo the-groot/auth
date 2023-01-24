@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] PERMIT_URL_ARRAY={
+    private static final String[] PERMIT_URL_ARRAY = {
             "/api/signup",
             "/auth/login",
             "/sns/**",
@@ -42,21 +42,22 @@ public class SecurityConfig {
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
 
-    public SecurityConfig(JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                          TokenProvider tokenProvider, CustomOAuth2AuthService customOAuth2AuthService,
-                          OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler,
-                          OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) {
+    public SecurityConfig(JwtAccessDeniedHandler jwtAccessDeniedHandler,
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            TokenProvider tokenProvider, CustomOAuth2AuthService customOAuth2AuthService,
+            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler,
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) {
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.tokenProvider = tokenProvider;
-        this.customOAuth2AuthService=customOAuth2AuthService;
-        this.oAuth2AuthenticationFailureHandler=oAuth2AuthenticationFailureHandler;
-        this.oAuth2AuthenticationSuccessHandler=oAuth2AuthenticationSuccessHandler;
+        this.customOAuth2AuthService = customOAuth2AuthService;
+        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     }
 
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

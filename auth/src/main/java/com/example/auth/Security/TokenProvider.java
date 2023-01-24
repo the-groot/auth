@@ -87,8 +87,7 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date accessValidity = new Date(now + this.accessTokenValidityInMilliseconds);
 
-
-        String accessToken=Jwts.builder()
+        String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -103,7 +102,7 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date refreshValidity = new Date(now + this.refreshTokenValidityInMilliseconds);
 
-        String refreshToken=Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setExpiration(refreshValidity)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();

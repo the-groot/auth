@@ -17,13 +17,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, Authentication authentication)
+            throws IOException, ServletException {
         log.info("성공!");
         String[] path = httpServletRequest.getRequestURI().split("/");
         Provider provider = Provider.valueOf(path[path.length - 1].toUpperCase());
         String oauthId = authentication.getName();
 
-        String uri = UriComponentsBuilder.fromUriString( "http://localhost:8080/social")
+        String uri = UriComponentsBuilder.fromUriString("http://localhost:8080/social")
                 .queryParam("provider", provider)
                 .queryParam("oauthId", oauthId)
                 .build().toUriString();

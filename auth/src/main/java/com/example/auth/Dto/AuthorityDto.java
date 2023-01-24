@@ -1,4 +1,5 @@
 package com.example.auth.Dto;
+
 import lombok.*;
 
 @Getter
@@ -7,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthorityDto {
+
     private String authorityName;
 }

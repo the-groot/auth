@@ -12,10 +12,12 @@ public class SecurityUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
 
-    private SecurityUtil() {}
+    private SecurityUtil() {
+    }
 
     public static Optional<String> getCurrentUsername() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
 
         if (authentication == null) {
             logger.debug("Security Context에 인증 정보가 없습니다.");

@@ -30,6 +30,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -37,19 +38,19 @@ public class AuthController {
     private final UserService userService;
 
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder,
-                          AuthService authService, UserService userService) {
+    public AuthController(TokenProvider tokenProvider,
+            AuthenticationManagerBuilder authenticationManagerBuilder,
+            AuthService authService, UserService userService) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.authService=authService;
-        this.userService=userService;
+        this.authService = authService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenInfo> authorize(@Valid @RequestBody LoginDto loginDto) {
         TokenInfo jwt = authService.login(loginDto);
-       // authService.saveRedis(jwt.getRefreshToken(), jwt.getUsername());
-
+        // authService.saveRedis(jwt.getRefreshToken(), jwt.getUsername());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
@@ -57,22 +58,22 @@ public class AuthController {
         Optional<String> currentUsername = SecurityUtil.getCurrentUsername();
         System.out.println("currentUsername = " + currentUsername);
 
-
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
 
     }
 
     @PostMapping("/reissue")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<DefaultResponse> reissueAccessToken(@RequestHeader HttpHeaders headers){
+    public ResponseEntity<DefaultResponse> reissueAccessToken(@RequestHeader HttpHeaders headers) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        DefaultResponse response = authService.reissueRefreshToken(headers.getFirst("refreshtoken"));
+        DefaultResponse response = authService.reissueRefreshToken(
+                headers.getFirst("refreshtoken"));
         return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
     }
 
 
     @PostMapping("/validate")
-    public boolean validateAccessToken(@RequestHeader String authorization){
+    public boolean validateAccessToken(@RequestHeader String authorization) {
         String accessToken = authorization.substring(7);
         return tokenProvider.validateToken(accessToken);
     }

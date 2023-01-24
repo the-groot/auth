@@ -31,9 +31,8 @@ public class User {
     @Column(name = "activated")
     private boolean activated;
 
-    @Column(name = "auth", length=50)
+    @Column(name = "auth", length = 50)
     private String auth;
-
 
 //    @ManyToMany
 //    @JoinTable(

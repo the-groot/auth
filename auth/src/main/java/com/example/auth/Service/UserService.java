@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -24,22 +25,21 @@ public class UserService {
 
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
+            AuthenticationManagerBuilder authenticationManagerBuilder,
+            TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManagerBuilder=authenticationManagerBuilder;
-        this.tokenProvider=tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.tokenProvider = tokenProvider;
     }
 
 
     @Transactional
     public UserDto signup(UserDto userDto) {
-      //  if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
-        if(userRepository.findOneByUsername(userDto.getUsername()).orElse(null)!=null){
+        //  if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
+        if (userRepository.findOneByUsername(userDto.getUsername()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
-
-
 
         User user = User.builder()
                 .username(userDto.getUsername())
@@ -53,7 +53,6 @@ public class UserService {
 
         return UserDto.from(userRepository.save(user));
     }
-
 
 
     public Optional<User> getUserByUsername(String username) {
@@ -84,7 +83,6 @@ public class UserService {
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
     }
-
 
 
 }

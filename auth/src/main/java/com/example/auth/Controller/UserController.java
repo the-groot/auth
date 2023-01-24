@@ -15,6 +15,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 public class UserController {
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -46,7 +47,6 @@ public class UserController {
     }
 
 
-
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/redis")
-    public void redisTest(){
+    public void redisTest() {
         //userService.test();
     }
 }

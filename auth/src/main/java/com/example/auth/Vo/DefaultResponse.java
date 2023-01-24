@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DefaultResponse<T> {
+
     private int code;
     private String message;
     private T object;

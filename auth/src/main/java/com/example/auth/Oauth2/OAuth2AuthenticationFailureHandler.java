@@ -18,8 +18,10 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, AuthenticationException e)
+            throws IOException, ServletException {
         log.info("실패!");
-        redirectStrategy.sendRedirect(httpServletRequest,httpServletResponse,"/login");
+        redirectStrategy.sendRedirect(httpServletRequest, httpServletResponse, "/login");
     }
 }
